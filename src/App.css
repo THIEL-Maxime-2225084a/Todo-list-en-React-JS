@@ -9,20 +9,25 @@ body {
 }
 
 .input-container, .item-container {
+  display: flex;
   background-color: grey;
   border: 5px solid rgb(73, 72, 72);
   border-radius: 15px;
 }
 
-.textInput {
+.text-input {
   width: 90%;
   height: 30px;
   background-color: grey;
   border-color: grey;
 }
 
-#MdAdd:hover {
-  background-color: white;
+.item-text {
+  margin: 5px;
+}
+
+.last-icons-pos {
+  justify-content: right;
 }
 
 
