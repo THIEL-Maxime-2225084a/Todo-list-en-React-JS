@@ -18,7 +18,6 @@ export default class TodoList extends Component {
   }
 
   createItem = () => {
-    console.log(this.state.itemsValues);
     const title = this.textInputRef.current.value;
     if (title) {
       this.setState(prevState => ({
@@ -30,18 +29,6 @@ export default class TodoList extends Component {
       }));
       this.textInputRef.current.value = '';
     }
-  }
-
-  editItem = (id, title) => {
-    this.setState(prevState => ({
-      itemsValues: prevState.itemsValues.map(item => {
-        if (item.id === id) {
-          return { ...item, title: title };
-        } else {
-          return item;
-        }
-      })
-    }));
   }
 
   deleteItem = (id) => {
@@ -63,6 +50,18 @@ export default class TodoList extends Component {
     }));
   }
 
+  checkBoxSelected = (id) => {
+    console.log(this.state.itemsValues);
+    this.setState(prevState => ({
+      itemsValues: prevState.itemsValues.map(item => {
+        if (item.id === id) {
+          return { ...item, selected: !item.selected };
+        } 
+        return item;
+      })
+    }));
+  }
+
   render() {
     return (
       <div id="todoListContainer" className="todo-list-container">
@@ -80,6 +79,7 @@ export default class TodoList extends Component {
             onDelete={this.deleteItem}
             onEdit={this.editItem}
             onSelect={this.toggleSelected}
+            onCheck={this.checkBoxSelected}
           />
         ))}
       </div>
