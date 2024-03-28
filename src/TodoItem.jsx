@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import './App.css';
 import { MdCheckBox, MdCheckBoxOutlineBlank, MdCalendarMonth, MdEdit, MdDelete } from 'react-icons/md';
 import Calendar from 'react-calendar';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default class TodoItem extends Component {
   constructor(props) {
@@ -9,7 +11,8 @@ export default class TodoItem extends Component {
     this.state = {
       editing: false,
       editedTitle: this.props.title,
-      calendarIsOpened: false
+      calendarIsOpened: false,
+      calendarDate: new Date()
     };
   }
 
@@ -33,7 +36,7 @@ export default class TodoItem extends Component {
 
   editTitle = () => {
     if (this.state.editedTitle) {
-      () => onEdit(this.props.id, this.state.editedTitle);
+      () => edit(this.props.id, this.state.editedTitle);
       this.setState({ editing: false });
     }
   }
@@ -48,22 +51,26 @@ export default class TodoItem extends Component {
     }
   }
 
+  dateChange = (date) => {
+    this.setState({ calendarDate: date })
+  }
+
   render() {
-    const { id, selected, onCheck, onDelete } = this.props;
-    const { editing, editedTitle, calendarIsOpened } = this.state;
+    const { id, selected, checkBx, deleteItm } = this.props;
+    const { editing, editedTitle, calendarIsOpened, calendarDate } = this.state;
     return (
       <>
         <div className="item-container">
-          {selected ? (<button onClick={() => onCheck(id)}><MdCheckBox/></button>) : (<button onClick={() => onCheck(id)}><MdCheckBoxOutlineBlank/></button>)}
-          {editing ? (<input type="text" value={editedTitle} onChange={this.inputChange} onKeyDown={this.inputKeyDown}/>) : (editedTitle)}
-          <div className="last-icons-pos">
-            {editing ? (<></>) : (<button onClick={this.theCalendar}><MdCalendarMonth/></button>)}
-            {editing ? (<></>) : (<button onClick={this.editButtonClick}><MdEdit/></button>)}
-            <button onClick={() => onDelete(id)}><MdDelete/></button>
+          {selected ? (<button onClick={() => checkBx(id)}><MdCheckBox/></button>) : (<button onClick={() => checkBx(id)}><MdCheckBoxOutlineBlank/></button>)}
+          <div className="item-text">
+            {editing ? (<input type="text" value={editedTitle} onChange={this.inputChange} onKeyDown={this.inputKeyDown}/>) : (editedTitle)}
           </div>
-        </div>
-        <div className="calendar-container">
-          {calendarIsOpened ? (<div><Calendar/><br/></div>) : (<></>)}
+          <div className="last-icons-pos">
+            {editing || selected ? (<></>) : (<button onClick={this.theCalendar}><MdCalendarMonth/></button>)}
+            {editing || selected ? (<></>) : (<button onClick={this.editButtonClick}><MdEdit/></button>)}
+            <button onClick={() => deleteItm(id)}><MdDelete/></button>
+          </div>
+          {calendarIsOpened ? (<DatePicker selected={calendarDate} onChange={this.dateChange}/>) : (<></>)}
         </div>
       </>
     );
