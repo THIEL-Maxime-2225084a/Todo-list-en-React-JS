@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+//import { useLocalStorage } from "@uidotdev/usehooks";
 import { MdAdd } from 'react-icons/md';
 import TodoItem from './TodoItem';
 import './App.css';
@@ -14,6 +15,7 @@ export default class TodoList extends Component {
       ]
     };
     this.textInputRef = React.createRef();
+    this.loadProgression;
   }
 
   createItem = () => {
@@ -25,7 +27,7 @@ export default class TodoList extends Component {
           ...prevState.itemsValues,
           { id: prevState.currentId, title: title, selected: false }
         ]
-      }));
+      }), () => this.saveProgression());
       this.textInputRef.current.value = '';
     }
   }
@@ -40,13 +42,13 @@ export default class TodoList extends Component {
           return item;
         }
       })
-    }));
+    }), () => this.saveProgression());
   }
 
   deleteItem = (id) => {
     this.setState(prevState => ({
       itemsValues: prevState.itemsValues.filter(item => item.id !== id)
-    }));
+    }), () => this.saveProgression());
   }
 
   checkBoxSelected = (id) => {
@@ -57,13 +59,26 @@ export default class TodoList extends Component {
         } 
         return item;
       })
-    }));
+    }), () => this.saveProgression());
   }
 
   getTotalSelected = () => {
     return this.state.itemsValues.reduce((total, item) => {
       return total + (item.selected ? 1 : 0);
     }, 0);
+  }
+
+  saveProgression = () => {
+    return localStorage.setItem('mySave', JSON.stringify(this.state.itemsValues));
+  }
+
+  loadProgression = () => {
+    loadSave = localStorage.getItem('mySave');
+    if (loadSave) {
+      this.setState({
+        itemsValues: JSON.parse(loadSave)
+      });
+    }
   }
 
   render() {
@@ -81,9 +96,9 @@ export default class TodoList extends Component {
             id={itemValues.id}
             title={itemValues.title}
             selected={itemValues.selected}
-            onDelete={this.deleteItem}
-            onEdit={this.editItem}    
-            onCheck={this.checkBoxSelected} 
+            deleteItm={this.deleteItem}
+            editBx={this.editItem}    
+            checkBx={this.checkBoxSelected} 
           />
         ))}
       </div>
