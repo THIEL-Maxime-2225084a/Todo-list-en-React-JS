@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-//import { useLocalStorage } from "@uidotdev/usehooks";
 import { MdAdd } from 'react-icons/md';
 import TodoItem from './TodoItem';
 import './App.css';
